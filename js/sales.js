@@ -1,6 +1,7 @@
 'use strict';
 
 var storeResultsEl = document.getElementById('storeResults');
+var locationArray = [];
 
 var resolvedTime = function (hour) {
   let amPm = 'am';
@@ -13,21 +14,21 @@ var resolvedTime = function (hour) {
 };
 var writeStoreData = function (parentElement, locations) {
   //for each location
-  for (let i = 0; i < locations.length; i++){
+  for (let i = 0; i < locations.length; i++) {
     let storeHeadder = document.createElement('h3');
     let wrappingUlEl = document.createElement('ul');
     storeHeadder.innerText = locations[i].locationName;
     wrappingUlEl.appendChild(storeHeadder);
 
-    for (let j = 0; j < locations[i].cookiesSold.hourlyBreakdown.length; j++){
+    for (let j = 0; j < locations[i].cookiesSold.hourlyBreakdown.length; j++) {
       let newLi = document.createElement('li');
-      newLi.innerText = `${resolvedTime(j+6)}: ${locations[i].cookiesSold.hourlyBreakdown[j]} cookies` ;
+      newLi.innerText = `${resolvedTime(j + 6)}: ${locations[i].cookiesSold.hourlyBreakdown[j]} cookies`;
       wrappingUlEl.appendChild(newLi);
     }
     parentElement.appendChild(wrappingUlEl);
     let total = document.createElement('li');
     total.classList.add('bold');
-    let totalText =`Total: ${locations[i].cookiesSold.totalSold} cookies`;
+    let totalText = `Total: ${locations[i].cookiesSold.totalSold} cookies`;
     total.innerText = totalText;
     wrappingUlEl.appendChild(total);
   }
@@ -58,41 +59,19 @@ var calculateDaysSales = function (locationArray) {
   }
 };
 
-var firstAndPike = {
-  locationName: '1st and Pike',
-  minCust: 23,
-  maxCust: 65,
-  avgCookieSale: 6.3,
-  cookiesSold: {}
+var Store = function (locationName, minCust, maxCust, avgCookieSale, cookiesSold = {}) {
+  this.locationName = locationName;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.avgCookieSale = avgCookieSale;
+  this.cookiesSold = cookiesSold;
 };
-var seaTacAirport = {
-  locationName: 'SeaTac Airport',
-  minCust: 2,
-  maxCust: 24,
-  avgCookieSale: 1.2,
-  cookiesSold: {}
-};
-var seattleCenter = {
-  locationName: 'Seattle Center',
-  minCust: 11,
-  maxCust: 38,
-  avgCookieSale: 3.7,
-  cookiesSold: {}
-};
-var capitolHill = {
-  locationName: 'Capitol Hill',
-  minCust: 20,
-  maxCust: 38,
-  avgCookieSale: 2.3,
-  cookiesSold: {}
-};
-var alki = {
-  locationName: 'Alki',
-  minCust: 2,
-  maxCust: 16,
-  avgCookieSale: 4.6,
-  cookiesSold: {}
-};
-var locationArray = [firstAndPike, seaTacAirport, seattleCenter, capitolHill, alki];
+
+locationArray.push(new Store('1st and Pike', 23, 65, 6.3));
+locationArray.push(new Store('SeaTac Airport', 2, 24, 1.2));
+locationArray.push(new Store('Seattle Center',11, 38, 3.7));
+locationArray.push(new Store('Capitol Hill', 20,38,2.3));
+locationArray.push(new Store('Alki', 2, 16,4.6));
+
 calculateDaysSales(locationArray);
-writeStoreData(storeResultsEl,locationArray);
+writeStoreData(storeResultsEl, locationArray);
