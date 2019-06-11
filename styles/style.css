@@ -1,0 +1,16 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+ul li {
+  list-style: none;
+}
+ul {
+  padding: 0;
+}
+.bold {
+  font-weight: 800;
+}
+#storeResults ul {
+  display: inline-block;
+  margin: 10px;
+}
