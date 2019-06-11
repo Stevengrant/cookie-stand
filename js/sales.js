@@ -41,7 +41,6 @@ var getSalesNumbers = function (maxCust, minCust, avgCookieSale) {
   };
   for (let i = 0; i < 15; i++) {
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_number_between_two_values
-
     //Updated w/ plus one as a result of in class discussion. Currently hitting max and min
     temp = (Math.random() * (maxCust - minCust + 1) + minCust);
     temp *= avgCookieSale;
