@@ -3,6 +3,22 @@
 //     Duplicate code has been removed and DRY principles are evident
 var table = document.querySelector('table');
 var locationArray = [];
+var newStoreElement = document.getElementById('salesForm');
+newStoreElement.addEventListener('submit', (event) => {
+  event.preventDefault();
+  let name = (typeof event.target[1].value === 'string') ? event.target[1].value : null;
+  console.log(name);
+  let min = (typeof parseInt(event.target[2].value) === 'number') ? parseInt(event.target[2].value) : null;
+  let max = (typeof parseInt(event.target[3].value) === 'number') ? parseInt(event.target[3].value) : null;
+  let avg = (typeof parseInt(event.target[4].value) === 'number') ? parseInt(event.target[4].value) : null;
+  let tempStore = new Store(name, min, max, avg);
+  locationArray.push(tempStore);
+  table.innerHTML = '';
+  calculateDaysSales(locationArray);
+  drawTableHead();
+  drawTable(table, locationArray);
+  drawTableFooter();
+});
 var getSalesNumbers = function (maxCust, minCust, avgCookieSale) {
   let total = 0;
   let temp = 0;
@@ -38,7 +54,7 @@ var Store = function (locationName, minCust, maxCust, avgCookieSale, cookiesSold
   this.avgCookieSale = avgCookieSale;
   this.cookiesSold = cookiesSold;
 };
-var makeTimeString = function(hour){
+var makeTimeString = function (hour) {
   let amPm = 'am';
   if (hour > 12) {
     hour -= 12;
@@ -87,12 +103,12 @@ var drawTableHead = function () {
   let tdEl = document.createElement('td');
   tdEl.innerText = 'Location';
   headEl.appendChild(tdEl);
-  for ( let i = 0; i < 15; i++){
-    tdEl = document.createElement('td') ;
-    tdEl.innerText = makeTimeString(i+6);
+  for (let i = 0; i < 15; i++) {
+    tdEl = document.createElement('td');
+    tdEl.innerText = makeTimeString(i + 6);
     headEl.appendChild(tdEl);
   }
-  tdEl = document.createElement('td') ;
+  tdEl = document.createElement('td');
   tdEl.innerText = 'Total:';
   headEl.appendChild(tdEl);
   table.appendChild(headEl);
@@ -104,22 +120,21 @@ var drawTableFooter = function () {
   tdEl.innerText = 'totals:';
   tfootEl.appendChild(tdEl);
   //Over the locations
-  for(let i = 0; i < locationArray.length; i++){
-    for(let j = 0; j < locationArray[i].cookiesSold.hourlyBreakdown.length;j++){
-      if(!hourlyTotals[j]){
-        console.log('nan bei');
+  for (let i = 0; i < locationArray.length; i++) {
+    for (let j = 0; j < locationArray[i].cookiesSold.hourlyBreakdown.length; j++) {
+      if (!hourlyTotals[j]) {
         hourlyTotals[j] = 0;
       }
-      hourlyTotals[j]+=locationArray[i].cookiesSold.hourlyBreakdown[j];
+      hourlyTotals[j] += locationArray[i].cookiesSold.hourlyBreakdown[j];
     }
   }
-  hourlyTotals.forEach((el)=>{
+  hourlyTotals.forEach((el) => {
     tdEl = document.createElement('td');
     tdEl.innerText = el;
     tfootEl.appendChild(tdEl);
   });
   let totalTotals = document.createElement('td');
-  totalTotals.innerText = hourlyTotals.reduce((a, c)=> a + c);
+  totalTotals.innerText = hourlyTotals.reduce((a, c) => a + c);
 
   tfootEl.appendChild(totalTotals);
   table.appendChild(tfootEl);
