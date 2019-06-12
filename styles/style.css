@@ -22,7 +22,13 @@ table {
 }
 table td {
   border:1px solid black;
+
 }
 thead {
   font-weight: 800;
+  background: rgb(212, 236, 238);
+
+}
+tfoot {
+  background: rgb(212, 236, 238);
 }
