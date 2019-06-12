@@ -1,38 +1,15 @@
 'use strict';
 
-var storeResultsEl = document.getElementById('storeResults');
+// User Stories and Feature Tasks
+// User Stories (MVP)
+// Technical Requirements
+
+//     The header row and footer row are each created in their own stand-alone function
+//     Duplicate code has been removed and DRY principles are evident
+//     Working on a non-master branch for the day, with regular commit history. Basically, every time you get something to work, you should do a commit. But you only need to push every couple of hours or so, tops.
+
+var table = document.querySelector('table');
 var locationArray = [];
-
-var resolvedTime = function (hour) {
-  let amPm = 'am';
-  //in case of pm
-  if (hour > 12) {
-    hour = hour - 12;
-    amPm = 'pm';
-  }
-  return `${hour}${amPm}`;
-};
-var writeStoreData = function (parentElement, locations) {
-  //for each location
-  for (let i = 0; i < locations.length; i++) {
-    let storeHeadder = document.createElement('h3');
-    let wrappingUlEl = document.createElement('ul');
-    storeHeadder.innerText = locations[i].locationName;
-    wrappingUlEl.appendChild(storeHeadder);
-
-    for (let j = 0; j < locations[i].cookiesSold.hourlyBreakdown.length; j++) {
-      let newLi = document.createElement('li');
-      newLi.innerText = `${resolvedTime(j + 6)}: ${locations[i].cookiesSold.hourlyBreakdown[j]} cookies`;
-      wrappingUlEl.appendChild(newLi);
-    }
-    parentElement.appendChild(wrappingUlEl);
-    let total = document.createElement('li');
-    total.classList.add('bold');
-    let totalText = `Total: ${locations[i].cookiesSold.totalSold} cookies`;
-    total.innerText = totalText;
-    wrappingUlEl.appendChild(total);
-  }
-};
 var getSalesNumbers = function (maxCust, minCust, avgCookieSale) {
   let total = 0;
   let temp = 0;
@@ -58,7 +35,7 @@ var calculateDaysSales = function (locationArray) {
     locationArray[i].cookiesSold = getSalesNumbers(locationArray[i].maxCust, locationArray[i].minCust, locationArray[i].avgCookieSale);
   }
 };
-
+//Store Constructor
 var Store = function (locationName, minCust, maxCust, avgCookieSale, cookiesSold = {}) {
   this.locationName = locationName;
   this.minCust = minCust;
@@ -66,12 +43,74 @@ var Store = function (locationName, minCust, maxCust, avgCookieSale, cookiesSold
   this.avgCookieSale = avgCookieSale;
   this.cookiesSold = cookiesSold;
 };
-
+var makeTimeString = function(hour){
+  let amPm = 'am';
+  if (hour > 12) {
+    hour -= 12;
+    amPm = 'pm';
+  }
+  return `${hour}${amPm}`;
+};
+Store.prototype.render = function (parentElement) {
+  let trEl = document.createElement('tr');
+  let tdEl = document.createElement('td');
+  tdEl.innerText = this.locationName;
+  trEl.appendChild(tdEl);
+  for (let i = 0; i < this.cookiesSold.hourlyBreakdown.length; i++) {
+    tdEl = document.createElement('td');
+    tdEl.innerText = this.cookiesSold.hourlyBreakdown[i];
+    trEl.appendChild(tdEl);
+  }
+  tdEl = document.createElement('td');
+  tdEl.innerText = this.cookiesSold.totalSold;
+  trEl.appendChild(tdEl);
+  parentElement.appendChild(trEl);
+};
 locationArray.push(new Store('1st and Pike', 23, 65, 6.3));
 locationArray.push(new Store('SeaTac Airport', 2, 24, 1.2));
-locationArray.push(new Store('Seattle Center',11, 38, 3.7));
-locationArray.push(new Store('Capitol Hill', 20,38,2.3));
-locationArray.push(new Store('Alki', 2, 16,4.6));
+locationArray.push(new Store('Seattle Center', 11, 38, 3.7));
+locationArray.push(new Store('Capitol Hill', 20, 38, 2.3));
+locationArray.push(new Store('Alki', 2, 16, 4.6));
 
 calculateDaysSales(locationArray);
-writeStoreData(storeResultsEl, locationArray);
+
+var drawTable = function (tableEl, locationArray) {
+  for (let i = 0; i < locationArray.length; i++) {
+    let workingRow = document.createElement('tr');
+    //location name
+    let locationNameEl = document.createElement('td');
+    locationNameEl.innerText = locationArray[i].locationName;
+    workingRow.appendChild(locationNameEl);
+    //hourly sales
+    locationArray[i].render(tableEl);
+  }
+};
+
+
+var drawTableHead = function () {
+  let headEl = document.createElement('thead');
+  let tdEl = document.createElement('td');
+  tdEl.innerText = 'Location';
+  headEl.appendChild(tdEl);
+  for ( let i = 0; i < 15; i++){
+    tdEl = document.createElement('td') ;
+    tdEl.innerText = makeTimeString(i+6);
+    headEl.appendChild(tdEl);
+  }
+  tdEl = document.createElement('td') ;
+  tdEl.innerText = 'Total:';
+  headEl.appendChild(tdEl);
+  table.appendChild(headEl);
+};
+var drawTableFooter = function () {
+  let tfootEl = document.createElement('tfoot');
+  let tdEl = document.createElement('el');
+  tdEl.innerText = 'totals:';
+  tfootEl.appendChild(tdEl);
+  table.appendChild(tfootEl);
+};
+
+drawTableHead();
+drawTable(table, locationArray);
+drawTableFooter();
+//writeStoreData(storeResultsEl, locationArray);

@@ -14,3 +14,15 @@ ul {
   display: inline-block;
   margin: 10px;
 }
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+table td {
+  border:1px solid black;
+}
+thead {
+  font-weight: 800;
+}
