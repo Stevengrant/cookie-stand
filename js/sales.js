@@ -7,7 +7,6 @@
 //     The header row and footer row are each created in their own stand-alone function
 //     Duplicate code has been removed and DRY principles are evident
 //     Working on a non-master branch for the day, with regular commit history. Basically, every time you get something to work, you should do a commit. But you only need to push every couple of hours or so, tops.
-
 var table = document.querySelector('table');
 var locationArray = [];
 var getSalesNumbers = function (maxCust, minCust, avgCookieSale) {
@@ -32,7 +31,9 @@ var getSalesNumbers = function (maxCust, minCust, avgCookieSale) {
 };
 var calculateDaysSales = function (locationArray) {
   for (let i = 0; i < locationArray.length; i++) {
-    locationArray[i].cookiesSold = getSalesNumbers(locationArray[i].maxCust, locationArray[i].minCust, locationArray[i].avgCookieSale);
+    let numberSold = getSalesNumbers(locationArray[i].maxCust, locationArray[i].minCust, locationArray[i].avgCookieSale);
+    locationArray[i].cookiesSold = numberSold;
+
   }
 };
 //Store Constructor
@@ -103,11 +104,28 @@ var drawTableHead = function () {
   table.appendChild(headEl);
 };
 var drawTableFooter = function () {
+  let hourlyTotals = [];
   let tfootEl = document.createElement('tfoot');
   let tdEl = document.createElement('el');
   tdEl.innerText = 'totals:';
   tfootEl.appendChild(tdEl);
   table.appendChild(tfootEl);
+  //Over the locations
+  for(let i = 0; i < locationArray.length; i++){
+    for(let j = 0; j < locationArray[i].cookiesSold.hourlyBreakdown.length;j++){
+      if(!hourlyTotals[j]){
+        console.log('nan bei');
+        hourlyTotals[j] = 0;
+      }
+      hourlyTotals[j]+=locationArray[i].cookiesSold.hourlyBreakdown[j];
+    }
+  }
+  hourlyTotals.forEach((el)=>{
+    tdEl = document.createElement('td');
+    tdEl.innerText = el;
+    tfootEl.appendChild(tdEl);
+  });
+  console.log(hourlyTotals);
 };
 
 drawTableHead();
