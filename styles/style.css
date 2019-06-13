@@ -32,3 +32,11 @@ thead {
 tfoot {
   background: rgb(212, 236, 238);
 }
+img {
+  display: inline-block;
+  height:30px;
+}
+h1 {
+  display: inline-block;
+  font-size: 30px;
+}
