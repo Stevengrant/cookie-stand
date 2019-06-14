@@ -122,3 +122,10 @@ footer section a {
 footer address{ 
 text-align: center;
 }
+footer a {
+  display: block;
+  margin:auto;
+  text-align: center;
+  width:15%;
+  margin-top:15px;
+}
