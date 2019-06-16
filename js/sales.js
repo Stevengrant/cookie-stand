@@ -1,6 +1,5 @@
 'use strict';
 
-//     Duplicate code has been removed and DRY principles are evident
 var table = document.querySelector('table');
 var locationArray = [];
 var newStoreElement = document.getElementById('salesForm');
